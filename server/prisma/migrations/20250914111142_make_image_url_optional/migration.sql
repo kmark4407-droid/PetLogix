@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "public"."Petlogix" ALTER COLUMN "address" DROP NOT NULL,
+ALTER COLUMN "contact" DROP NOT NULL,
+ALTER COLUMN "species" DROP NOT NULL,
+ALTER COLUMN "breed" DROP NOT NULL,
+ALTER COLUMN "imageUrl" DROP NOT NULL;

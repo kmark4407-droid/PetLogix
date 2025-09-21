@@ -1,0 +1,1122 @@
+/* petlogix-modern.css */
+:root {
+  --primary: #3A86FF;
+  --primary-dark: #2563EB;
+  --primary-light: #DBEAFE;
+  --primary-ultralight: #EFF6FF;
+  --secondary: #FF006E;
+  --secondary-dark: #DB2777;
+  --accent: #FFBE0B;
+  --accent-dark: #F59E0B;
+  --neutral-dark: #1F2937;
+  --neutral-medium: #6B7280;
+  --neutral-light: #E5E7EB;
+  --neutral-ultralight: #F9FAFB;
+  --success: #10B981;
+  --success-dark: #059669;
+  --warning: #F59E0B;
+  --warning-dark: #D97706;
+  --danger: #EF4444;
+  --danger-dark: #DC2626;
+  --background: #F8FAFC;
+  --surface: #FFFFFF;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-light: #6B7280;
+  --border: #E5E7EB;
+  --border-light: #F3F4F6;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.petlogix-modern-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Modal Styles */
+.modern-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: modern-fadeIn 0.3s ease-out;
+}
+
+.modern-modal-content {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: modern-scaleIn 0.3s ease-out;
+}
+
+.modern-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.modern-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.modern-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.modern-modal-close:hover {
+  background-color: var(--neutral-ultralight);
+  color: var(--text-primary);
+}
+
+.modern-modal-body {
+  padding: 2rem;
+}
+
+.modern-modal-image {
+  width: 100%;
+  height: 300px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  background-color: var(--neutral-ultralight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-modal-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modern-image-placeholder-large {
+  font-size: 6rem;
+  opacity: 0.3;
+}
+
+.modern-modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modern-modal-detail-row {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.modern-modal-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 100px;
+}
+
+.modern-modal-value {
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.modern-modal-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.modern-modal-actions button {
+  flex: 1;
+}
+
+/* Header Styles */
+.modern-app-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: var(--radius-lg);
+  padding: 4rem 2rem;
+  margin-bottom: 3rem;
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.modern-app-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 25%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 25%);
+  opacity: 0.6;
+}
+
+.modern-header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.modern-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.modern-paw-icon {
+  font-size: 3rem;
+  margin-right: 1rem;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+  animation: modern-bounce 2s infinite;
+}
+
+@keyframes modern-bounce {
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+  40% {transform: translateY(-10px);}
+  60% {transform: translateY(-5px);}
+}
+
+.modern-logo h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modern-tagline {
+  font-size: 1.3rem;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.modern-header-decoration {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.modern-decoration-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.modern-floating-pets {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.modern-floating-pet {
+  position: absolute;
+  font-size: 2.2rem;
+  opacity: 0.25;
+  animation: modern-float 20s infinite ease-in-out;
+}
+
+.modern-floating-pet:nth-child(1) {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 22s;
+}
+
+.modern-floating-pet:nth-child(2) {
+  top: 60%;
+  left: 80%;
+  animation-delay: -5s;
+  animation-duration: 20s;
+}
+
+.modern-floating-pet:nth-child(3) {
+  top: 30%;
+  left: 70%;
+  animation-delay: -10s;
+  animation-duration: 24s;
+}
+
+.modern-floating-pet:nth-child(4) {
+  top: 70%;
+  left: 20%;
+  animation-delay: -15s;
+  animation-duration: 18s;
+}
+
+@keyframes modern-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translateY(-30px) rotate(120deg) scale(1.1);
+  }
+  66% {
+    transform: translateY(15px) rotate(240deg) scale(0.9);
+  }
+}
+
+/* Notification */
+.modern-notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  animation: modern-slideIn 0.3s ease-out;
+  border-left: 4px solid;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.modern-notification.success {
+  color: var(--success-dark);
+  border-left-color: var(--success);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.modern-notification.error {
+  color: var(--danger-dark);
+  border-left-color: var(--danger);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.modern-notification-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modern-notification-icon {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.modern-close-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: var(--transition);
+  opacity: 0.7;
+}
+
+.modern-close-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Section Styles */
+.modern-form-section, .modern-pets-section {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 3rem;
+  margin-bottom: 3rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-form-section::before, .modern-pets-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, var(--primary-light) 0%, transparent 70%);
+  border-radius: 0 0 0 100%;
+  z-index: 0;
+}
+
+.modern-form-section:hover, .modern-pets-section:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.modern-section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.modern-section-header h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary);
+  position: relative;
+  display: inline-block;
+}
+
+.modern-section-header h2::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 4px;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  border-radius: 2px;
+}
+
+.modern-section-header p {
+  color: var(--text-secondary);
+  margin: 1.75rem 0 1.75rem;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+.modern-section-divider {
+  height: 4px;
+  width: 70px;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* Form Styles */
+.modern-pet-form {
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.modern-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.modern-input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.modern-input-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.modern-input-group label {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.modern-input-group input, .modern-input-group select {
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--surface);
+  font-family: inherit;
+}
+
+.modern-input-group input:focus, .modern-input-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.modern-select-wrapper {
+  position: relative;
+}
+
+.modern-select-wrapper select {
+  appearance: none;
+  width: 100%;
+}
+
+.modern-select-arrow {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* File Input Styles */
+.modern-file-input-container {
+  position: relative;
+}
+
+.modern-file-input-label {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+}
+
+.modern-file-input-button {
+  background: var(--surface);
+  color: var(--text-primary);
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: var(--transition);
+  margin-right: 1rem;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--border);
+  font-size: 1rem;
+}
+
+.modern-file-input-button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.modern-file-input-text {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.modern-file-input {
+  position: absolute;
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.modern-image-preview {
+  position: relative;
+  margin-top: 1.25rem;
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--border);
+  transition: var(--transition);
+}
+
+.modern-image-preview:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.modern-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modern-remove-image-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  color: var(--text-secondary);
+}
+
+.modern-remove-image-btn:hover {
+  background-color: white;
+  color: var(--danger);
+  transform: scale(1.1);
+}
+
+/* Button Styles */
+.modern-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.modern-primary-btn, .modern-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-primary-btn::before, .modern-secondary-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.modern-primary-btn:hover::before, .modern-secondary-btn:hover::before {
+  left: 100%;
+}
+
+.modern-primary-btn {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.modern-primary-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.modern-primary-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modern-secondary-btn {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 2px solid var(--border);
+}
+
+.modern-secondary-btn:hover {
+  background-color: var(--neutral-ultralight);
+  border-color: var(--neutral-medium);
+  transform: translateY(-2px);
+}
+
+.modern-button-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modern-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: modern-spin 1s linear infinite;
+}
+
+@keyframes modern-spin {
+  to { transform: rotate(360deg); }
+}
+
+.modern-btn-icon {
+  font-size: 1.1rem;
+}
+
+/* Controls Row */
+.modern-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Filter Tabs */
+.modern-filter-tabs {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modern-tab {
+  padding: 0.875rem 1.75rem;
+  background-color: transparent;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+}
+
+.modern-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: var(--primary-ultralight);
+  transform: translateY(-2px);
+}
+
+.modern-tab.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+/* Search */
+.modern-search-container {
+  position: relative;
+  min-width: 250px;
+}
+
+.modern-search-input {
+  padding: 0.875rem 1.25rem 0.875rem 3rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--surface);
+  font-family: inherit;
+  width: 100%;
+}
+
+.modern-search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.modern-search-icon {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+}
+
+/* Loading and Empty States */
+.modern-loading, .modern-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.modern-loading .modern-spinner {
+  margin-bottom: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-width: 3px;
+  color: var(--primary);
+}
+
+.modern-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.modern-empty-state h3 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.modern-empty-state p {
+  margin: 0 0 2rem;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+/* Pet Cards Grid */
+.modern-pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.modern-pet-card {
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border: 1px solid var(--border-light);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modern-pet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.modern-pet-image-container {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.modern-pet-image {
+  width: 100%;
+  height: 100%;
+  background-color: var(--neutral-ultralight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-pet-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition);
+}
+
+.modern-pet-card:hover .modern-pet-image img {
+  transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes modern-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modern-scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Make pet cards clickable */
+.modern-pet-card {
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modern-pet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.modern-image-placeholder {
+  font-size: 4rem;
+  opacity: 0.3;
+}
+
+.modern-pet-species-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
+}
+
+.modern-pet-card-heart {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  animation: modern-pulse 2s infinite;
+}
+
+@keyframes modern-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.modern-pet-info {
+  padding: 1.75rem;
+  flex-grow: 1;
+}
+
+.modern-pet-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modern-pet-owner {
+  margin: 0 0 1.5rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.modern-pet-details {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.modern-detail-tag {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.modern-pet-address, .modern-pet-contact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.modern-icon {
+  font-size: 1.1rem;
+  opacity: 0.7;
+}
+
+.modern-pet-actions {
+  display: flex;
+  padding: 0 1.75rem 1.75rem;
+  gap: 0.75rem;
+}
+
+.modern-edit-btn, .modern-delete-btn {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.modern-edit-btn {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.modern-edit-btn:hover:not(:disabled) {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.modern-delete-btn {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.modern-delete-btn:hover:not(:disabled) {
+  background-color: var(--danger);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.modern-edit-btn:disabled, .modern-delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Footer */
+.modern-app-footer {
+  text-align: center;
+  padding: 3rem 0 2rem;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.modern-footer-paws {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  opacity: 0.5;
+}
+
+/* Animations */
+@keyframes modern-slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .petlogix-modern-container {
+    padding: 1.5rem;
+  }
+  
+  .modern-form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modern-pets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-app-header {
+    padding: 3rem 1.5rem;
+  }
+  
+  .modern-logo h1 {
+    font-size: 2.5rem;
+  }
+  
+  .modern-form-section, .modern-pets-section {
+    padding: 2rem;
+  }
+  
+  .modern-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .modern-filter-tabs {
+    justify-content: center;
+  }
+  
+  .modern-pet-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .petlogix-modern-container {
+    padding: 1rem;
+  }
+  
+  .modern-form-section, .modern-pets-section {
+    padding: 1.5rem;
+  }
+  
+  .modern-form-actions {
+    flex-direction: column;
+  }
+  
+  .modern-primary-btn, .modern-secondary-btn {
+    width: 100%;
+  }
+  
+  .modern-pets-grid {
+    grid-template-columns: 1fr;
+  }
+}
