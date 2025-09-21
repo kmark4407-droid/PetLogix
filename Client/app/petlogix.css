@@ -230,6 +230,99 @@ body {
   60% {transform: translateY(-5px);}
 }
 
+/* Pet attributes styling */
+.modern-pet-attributes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.modern-pet-attribute {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background-color: var(--neutral-ultralight);
+  border-radius: var(--radius-sm);
+}
+
+.modern-attribute-icon {
+  font-size: 1.25rem;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.modern-attribute-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.modern-attribute-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-attribute-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* See More button */
+.modern-see-more-btn {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.modern-see-more-btn:hover {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Update pet actions to handle the new button */
+.modern-pet-actions {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.75rem 1.75rem;
+  gap: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modern-pet-attribute {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .modern-attribute-content {
+    align-items: center;
+  }
+}
 .modern-logo h1 {
   font-size: 3.2rem;
   font-weight: 800;
@@ -1043,6 +1136,119 @@ body {
   gap: 1rem;
   margin-top: 1rem;
   opacity: 0.5;
+}
+
+/* Stats Section */
+.modern-stats-section {
+  margin-bottom: 3rem;
+}
+
+.modern-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.modern-stat-card {
+  background-color: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.modern-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.modern-stat-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-stat-icon.total {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.modern-stat-icon.available {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.modern-stat-icon.reserved {
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.modern-stat-icon.sold {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.modern-stat-content h3 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modern-stat-content p {
+  margin: 0.25rem 0 0;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Status badges */
+.modern-pet-status-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+}
+
+.status-available {
+  background-color: rgba(16, 185, 129, 0.9);
+  color: white;
+}
+
+.status-reserved {
+  background-color: rgba(245, 158, 11, 0.9);
+  color: white;
+}
+
+.status-sold {
+  background-color: rgba(239, 68, 68, 0.9);
+  color: white;
+}
+
+/* Status in modal */
+.status-available {
+  color: white;
+  font-weight: 600;
+}
+
+.status-reserved {
+  color: white;
+  font-weight: 600;
+}
+
+.status-sold {
+  color: white;
+  font-weight: 600;
 }
 
 /* Animations */
