@@ -26,6 +26,14 @@ export async function POST(req) {
     // If id is included, remove it
     delete data.id;
 
+    // Validate required fields
+    if (!data.name || !data.owner) {
+      return NextResponse.json(
+        { success: false, message: "❌ Name and owner are required fields" },
+        { status: 400 }
+      );
+    }
+
     const pet = await prisma.petlogix.create({ data });
     return NextResponse.json({
       success: true,
@@ -45,10 +53,19 @@ export async function POST(req) {
 export async function PUT(req) {
   try {
     const { id, ...data } = await req.json();
+    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "❌ Pet ID is required" },
+        { status: 400 }
+      );
+    }
+
     const pet = await prisma.petlogix.update({
-      where: { id: parseInt(id) }, // ensure it's an integer
+      where: { id: parseInt(id) },
       data,
     });
+    
     return NextResponse.json({
       success: true,
       message: "✏️ Pet updated successfully",
@@ -56,6 +73,15 @@ export async function PUT(req) {
     });
   } catch (error) {
     console.error("PUT error:", error);
+    
+    // Handle case where pet doesn't exist
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, message: "❌ Pet not found" },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { success: false, message: "❌ Failed to update pet", error: error.message },
       { status: 500 }
@@ -66,10 +92,18 @@ export async function PUT(req) {
 // DELETE pet
 export async function DELETE(req) {
   try {
-    const { id } = await req.json(); // id from JSON body
-    if (!id) throw new Error("No ID provided");
+    const { id } = await req.json();
+    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "❌ Pet ID is required" },
+        { status: 400 }
+      );
+    }
 
-    await prisma.petlogix.delete({ where: { id } });
+    await prisma.petlogix.delete({ 
+      where: { id: parseInt(id) } 
+    });
 
     return NextResponse.json({
       success: true,
@@ -77,6 +111,15 @@ export async function DELETE(req) {
     });
   } catch (error) {
     console.error("DELETE error:", error);
+    
+    // Handle case where pet doesn't exist
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { success: false, message: "❌ Pet not found" },
+        { status: 404 }
+      );
+    }
+    
     return NextResponse.json(
       { success: false, message: "❌ Failed to delete pet", error: error.message },
       { status: 500 }
