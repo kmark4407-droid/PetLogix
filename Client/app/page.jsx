@@ -256,7 +256,7 @@ export default function PetInventoryPage() {
         <div className="modern-header-content">
           <div className="modern-logo">
             <span className="modern-paw-icon">🐾</span>
-            <h1>Pet Inventory</h1>
+            <h1>PetLogix</h1>
           </div>
           <p className="modern-tagline">Manage your pet inventory with ease</p>
         </div>
@@ -639,7 +639,7 @@ export default function PetInventoryPage() {
 
       <section className="modern-pets-section">
         <div className="modern-section-header">
-          <h2>Pet Inventory ({pets.length})</h2>
+          <h2>PetLogix ({pets.length})</h2>
           <p>Manage your pet inventory</p>
           <div className="modern-section-divider"></div>
         </div>
