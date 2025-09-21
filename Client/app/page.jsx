@@ -5,7 +5,7 @@ import "./petlogix.css";
 
 const SERVER_URL = "/api";
 
-export default function PetlogixPage() {
+export default function PetInventoryPage() {
   const [pets, setPets] = useState([]);
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("success");
@@ -16,6 +16,10 @@ export default function PetlogixPage() {
     contact: "",
     species: "",
     breed: "",
+    age: "",
+    weight: "",
+    status: "available",
+    price: "",
     imageUrl: "",
     imageFile: null,
   });
@@ -24,7 +28,13 @@ export default function PetlogixPage() {
   const [imagePreview, setImagePreview] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedPet, setSelectedPet] = useState(null); // For detailed view
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [stats, setStats] = useState({
+    total: 0,
+    available: 0,
+    sold: 0,
+    reserved: 0
+  });
 
   // Fetch pets
   const fetchPets = async () => {
@@ -32,8 +42,10 @@ export default function PetlogixPage() {
       setIsLoading(true);
       const res = await fetch(SERVER_URL);
       const data = await res.json();
-      if (data.success) setPets(data.pets);
-      else {
+      if (data.success) {
+        setPets(data.pets);
+        calculateStats(data.pets);
+      } else {
         setMessage(data.message);
         setMessageType("error");
       }
@@ -44,6 +56,16 @@ export default function PetlogixPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Calculate inventory statistics
+  const calculateStats = (pets) => {
+    const total = pets.length;
+    const available = pets.filter(pet => pet.status === "available").length;
+    const sold = pets.filter(pet => pet.status === "sold").length;
+    const reserved = pets.filter(pet => pet.status === "reserved").length;
+    
+    setStats({ total, available, sold, reserved });
   };
 
   useEffect(() => {
@@ -68,110 +90,126 @@ export default function PetlogixPage() {
     }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    setIsLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
 
-    let imageBase64 = form.imageUrl;
+      let imageBase64 = form.imageUrl;
 
-    if (form.imageFile) {
-      imageBase64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(form.imageFile);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (err) => reject(err);
-      });
+      if (form.imageFile) {
+        imageBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(form.imageFile);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (err) => reject(err);
+        });
+      }
+
+      const payload = {
+        name: form.name,
+        owner: form.owner,
+        address: form.address,
+        contact: form.contact,
+        species: form.species,
+        breed: form.breed,
+        age: form.age,
+        weight: form.weight,
+        status: form.status,
+        price: form.price,
+        imageUrl: imageBase64,
+      };
+
+      let res;
+      if (editingId) {
+        res = await fetch(`${SERVER_URL}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: editingId, ...payload }),
+        });
+        setEditingId(null);
+      } else {
+        res = await fetch(SERVER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
+
+      const data = await res.json();
+      setMessage(data.message);
+      setMessageType(data.success ? "success" : "error");
+
+      if (data.success) {
+        setForm({
+          name: "",
+          owner: "",
+          address: "",
+          contact: "",
+          species: "",
+          breed: "",
+          age: "",
+          weight: "",
+          status: "available",
+          price: "",
+          imageUrl: "",
+          imageFile: null,
+        });
+        setImagePreview(null);
+        fetchPets();
+      }
+    } catch (err) {
+      setMessage("Failed to submit pet data");
+      setMessageType("error");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    const payload = {
-      name: form.name,
-      owner: form.owner,
-      address: form.address,
-      contact: form.contact,
-      species: form.species,
-      breed: form.breed,
-      imageUrl: imageBase64,
-    };
+  const handleDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this pet from inventory?")) return;
 
-    let res;
-    if (editingId) {
-      res = await fetch(`${SERVER_URL}`, {
-        method: "PUT",
+    try {
+      setIsLoading(true);
+
+      const res = await fetch(`${SERVER_URL}`, {
+        method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: editingId, ...payload }),
+        body: JSON.stringify({ id }),
       });
-      setEditingId(null);
-    } else {
-      res = await fetch(SERVER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    }
 
-    const data = await res.json();
-    setMessage(data.message);
-    setMessageType(data.success ? "success" : "error");
+      const data = await res.json();
+      setMessage(data.message);
+      setMessageType(data.success ? "success" : "error");
 
-    if (data.success) {
-      setForm({
-        name: "",
-        owner: "",
-        address: "",
-        contact: "",
-        species: "",
-        breed: "",
-        imageUrl: "",
-        imageFile: null,
-      });
-      setImagePreview(null);
       fetchPets();
+    } catch (err) {
+      setMessage("Failed to delete pet");
+      setMessageType("error");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
-  } catch (err) {
-    setMessage("Failed to submit pet data");
-    setMessageType("error");
-    console.error(err);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-// In handleDelete, ensure you're using the correct endpoint:
-const handleDelete = async (id) => {
-  if (!confirm("Are you sure you want to delete this pet?")) return;
-
-  try {
-    setIsLoading(true);
-
-    const res = await fetch(`${SERVER_URL}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }), // send id in body
-    });
-
-    const data = await res.json(); // parse JSON response
-    setMessage(data.message);
-    setMessageType(data.success ? "success" : "error");
-
-    fetchPets(); // refresh list
-  } catch (err) {
-    setMessage("Failed to delete pet");
-    setMessageType("error");
-    console.error(err);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const handleEdit = (pet) => {
     setForm({
-      ...pet,
+      name: pet.name || "",
+      owner: pet.owner || "",
+      address: pet.address || "",
+      contact: pet.contact || "",
+      species: pet.species || "",
+      breed: pet.breed || "",
+      age: pet.age || "",
+      weight: pet.weight || "",
+      status: pet.status || "available",
+      price: pet.price || "",
+      imageUrl: pet.imageUrl || "",
       imageFile: null
     });
     setEditingId(pet.id);
     setImagePreview(pet.imageUrl || null);
-    // Scroll to form
     document.getElementById("pet-form").scrollIntoView({ behavior: "smooth" });
   };
 
@@ -184,30 +222,32 @@ const handleDelete = async (id) => {
       contact: "",
       species: "",
       breed: "",
+      age: "",
+      weight: "",
+      status: "available",
+      price: "",
       imageUrl: "",
       imageFile: null,
     });
     setImagePreview(null);
   };
 
-  // Show pet details
   const showPetDetails = (pet) => {
     setSelectedPet(pet);
   };
 
-  // Close pet details
   const closePetDetails = () => {
     setSelectedPet(null);
   };
 
-  // Filter pets by species and search query
+  // Filter pets by status and search query
   const filteredPets = (activeTab === "all" 
     ? pets 
-    : pets.filter(pet => pet.species.toLowerCase() === activeTab)
+    : pets.filter(pet => pet.status === activeTab)
   ).filter(pet => 
     pet.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     pet.owner.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    pet.breed.toLowerCase().includes(searchQuery.toLowerCase())
+    (pet.breed && pet.breed.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -216,9 +256,9 @@ const handleDelete = async (id) => {
         <div className="modern-header-content">
           <div className="modern-logo">
             <span className="modern-paw-icon">🐾</span>
-            <h1>Petlogix</h1>
+            <h1>Pet Inventory</h1>
           </div>
-          <p className="modern-tagline">Where every pet's story begins</p>
+          <p className="modern-tagline">Manage your pet inventory with ease</p>
         </div>
         <div className="modern-header-decoration">
           <div className="modern-decoration-item"></div>
@@ -247,6 +287,40 @@ const handleDelete = async (id) => {
         </div>
       )}
 
+      {/* Inventory Stats */}
+      <section className="modern-stats-section">
+        <div className="modern-stats-grid">
+          <div className="modern-stat-card">
+            <div className="modern-stat-icon total">📊</div>
+            <div className="modern-stat-content">
+              <h3>{stats.total}</h3>
+              <p>Total Pets</p>
+            </div>
+          </div>
+          <div className="modern-stat-card">
+            <div className="modern-stat-icon available">✅</div>
+            <div className="modern-stat-content">
+              <h3>{stats.available}</h3>
+              <p>Available</p>
+            </div>
+          </div>
+          <div className="modern-stat-card">
+            <div className="modern-stat-icon reserved">⏳</div>
+            <div className="modern-stat-content">
+              <h3>{stats.reserved}</h3>
+              <p>Reserved</p>
+            </div>
+          </div>
+          <div className="modern-stat-card">
+            <div className="modern-stat-icon sold">💰</div>
+            <div className="modern-stat-content">
+              <h3>{stats.sold}</h3>
+              <p>Sold</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pet Details Modal */}
       {selectedPet && (
         <div className="modern-modal-overlay" onClick={closePetDetails}>
@@ -272,6 +346,12 @@ const handleDelete = async (id) => {
               </div>
               <div className="modern-modal-details">
                 <div className="modern-modal-detail-row">
+                  <span className="modern-modal-label">Status:</span>
+                  <span className={`modern-modal-value status-${selectedPet.status}`}>
+                    {selectedPet.status}
+                  </span>
+                </div>
+                <div className="modern-modal-detail-row">
                   <span className="modern-modal-label">Owner:</span>
                   <span className="modern-modal-value">{selectedPet.owner}</span>
                 </div>
@@ -283,6 +363,24 @@ const handleDelete = async (id) => {
                   <span className="modern-modal-label">Breed:</span>
                   <span className="modern-modal-value">{selectedPet.breed || "Unknown"}</span>
                 </div>
+                {selectedPet.age && (
+                  <div className="modern-modal-detail-row">
+                    <span className="modern-modal-label">Age:</span>
+                    <span className="modern-modal-value">{selectedPet.age}</span>
+                  </div>
+                )}
+                {selectedPet.weight && (
+                  <div className="modern-modal-detail-row">
+                    <span className="modern-modal-label">Weight:</span>
+                    <span className="modern-modal-value">{selectedPet.weight} kg</span>
+                  </div>
+                )}
+                {selectedPet.price && (
+                  <div className="modern-modal-detail-row">
+                    <span className="modern-modal-label">Price:</span>
+                    <span className="modern-modal-value">${selectedPet.price}</span>
+                  </div>
+                )}
                 {selectedPet.address && (
                   <div className="modern-modal-detail-row">
                     <span className="modern-modal-label">Address:</span>
@@ -320,8 +418,8 @@ const handleDelete = async (id) => {
 
       <section className="modern-form-section">
         <div className="modern-section-header">
-          <h2>{editingId ? "Edit Pet Details" : "Add a New Family Member"}</h2>
-          <p>{editingId ? "Update your pet's information" : "Share your furry friend with the world"}</p>
+          <h2>{editingId ? "Edit Pet Details" : "Add New Pet to Inventory"}</h2>
+          <p>{editingId ? "Update pet information" : "Add a new pet to your inventory"}</p>
           <div className="modern-section-divider"></div>
         </div>
         <form
@@ -352,28 +450,6 @@ const handleDelete = async (id) => {
                 onChange={handleChange}
                 placeholder="e.g. Sarah Johnson"
                 required
-              />
-            </div>
-            
-            <div className="modern-input-group">
-              <label htmlFor="address">Home Address</label>
-              <input
-                id="address"
-                name="address"
-                value={form.address}
-                onChange={handleChange}
-                placeholder="e.g. 123 Old Cabalan"
-              />
-            </div>
-            
-            <div className="modern-input-group">
-              <label htmlFor="contact">Contact Number</label>
-              <input
-                id="contact"
-                name="contact"
-                value={form.contact}
-                onChange={handleChange}
-                placeholder="e.g. 0917-123-4567 "
               />
             </div>
             
@@ -409,9 +485,88 @@ const handleDelete = async (id) => {
               />
             </div>
             
+            <div className="modern-input-group">
+              <label htmlFor="age">Age</label>
+              <input
+                id="age"
+                name="age"
+                type="number"
+                min="0"
+                value={form.age}
+                onChange={handleChange}
+                placeholder="e.g. 2"
+              />
+            </div>
+            
+            <div className="modern-input-group">
+              <label htmlFor="weight">Weight (kg)</label>
+              <input
+                id="weight"
+                name="weight"
+                type="number"
+                step="0.1"
+                min="0"
+                value={form.weight}
+                onChange={handleChange}
+                placeholder="e.g. 5.2"
+              />
+            </div>
+            
+            <div className="modern-input-group">
+              <label htmlFor="status">Status</label>
+              <div className="modern-select-wrapper">
+                <select
+                  id="status"
+                  name="status"
+                  value={form.status}
+                  onChange={handleChange}
+                >
+                  <option value="available">Available</option>
+                  <option value="reserved">Reserved</option>
+                  <option value="sold">Sold</option>
+                </select>
+                <span className="modern-select-arrow">▼</span>
+              </div>
+            </div>
+            
+            <div className="modern-input-group">
+              <label htmlFor="price">Price ($)</label>
+              <input
+                id="price"
+                name="price"
+                type="number"
+                step="0.01"
+                min="0"
+                value={form.price}
+                onChange={handleChange}
+                placeholder="e.g. 299.99"
+              />
+            </div>
+            
+            <div className="modern-input-group">
+              <label htmlFor="address">Home Address</label>
+              <input
+                id="address"
+                name="address"
+                value={form.address}
+                onChange={handleChange}
+                placeholder="e.g. 123 Old Cabalan"
+              />
+            </div>
+            
+            <div className="modern-input-group">
+              <label htmlFor="contact">Contact Number</label>
+              <input
+                id="contact"
+                name="contact"
+                value={form.contact}
+                onChange={handleChange}
+                placeholder="e.g. 0917-123-4567"
+              />
+            </div>
             
             <div className="modern-input-group full-width">
-              <label htmlFor="imageUpload">Upload a Photo of Your Adorable Pet</label>
+              <label htmlFor="imageUpload">Upload a Photo</label>
               <div className="modern-file-input-container">
                 <label htmlFor="imageUpload" className="modern-file-input-label">
                   <span className="modern-file-input-button">Choose File</span>
@@ -474,7 +629,7 @@ const handleDelete = async (id) => {
               ) : (
                 <>
                   <span className="modern-btn-icon">+</span>
-                  Add Pet
+                  Add to Inventory
                 </>
               )}
             </button>
@@ -484,8 +639,8 @@ const handleDelete = async (id) => {
 
       <section className="modern-pets-section">
         <div className="modern-section-header">
-          <h2>Your Furry Family ({pets.length})</h2>
-          <p>All your beloved companions in one place</p>
+          <h2>Pet Inventory ({pets.length})</h2>
+          <p>Manage your pet inventory</p>
           <div className="modern-section-divider"></div>
         </div>
         
@@ -498,22 +653,22 @@ const handleDelete = async (id) => {
               All Pets
             </button>
             <button 
-              className={activeTab === "dog" ? "modern-tab active" : "modern-tab"}
-              onClick={() => setActiveTab("dog")}
+              className={activeTab === "available" ? "modern-tab active" : "modern-tab"}
+              onClick={() => setActiveTab("available")}
             >
-              Dogs
+              Available
             </button>
             <button 
-              className={activeTab === "cat" ? "modern-tab active" : "modern-tab"}
-              onClick={() => setActiveTab("cat")}
+              className={activeTab === "reserved" ? "modern-tab active" : "modern-tab"}
+              onClick={() => setActiveTab("reserved")}
             >
-              Cats
+              Reserved
             </button>
             <button 
-              className={activeTab === "other" ? "modern-tab active" : "modern-tab"}
-              onClick={() => setActiveTab("other")}
+              className={activeTab === "sold" ? "modern-tab active" : "modern-tab"}
+              onClick={() => setActiveTab("sold")}
             >
-              Others
+              Sold
             </button>
           </div>
           
@@ -532,13 +687,13 @@ const handleDelete = async (id) => {
         {isLoading && pets.length === 0 ? (
           <div className="modern-loading">
             <div className="modern-spinner"></div>
-            Loading your pets...
+            Loading inventory...
           </div>
         ) : filteredPets.length === 0 ? (
           <div className="modern-empty-state">
             <div className="modern-empty-icon">🐶</div>
             <h3>No pets found</h3>
-            <p>{activeTab !== "all" ? `You don't have any ${activeTab}s yet.` : "No pets added yet. Start by adding your first pet!"}</p>
+            <p>{activeTab !== "all" ? `You don't have any ${activeTab} pets.` : "Your inventory is empty. Add your first pet!"}</p>
             {activeTab !== "all" && (
               <button className="modern-primary-btn" onClick={() => setActiveTab("all")}>
                 View All Pets
@@ -546,82 +701,120 @@ const handleDelete = async (id) => {
             )}
           </div>
         ) : (
-          <div className="modern-pets-grid">
-            {filteredPets.map((pet) => (
-              <div key={pet.id} className="modern-pet-card" onClick={() => showPetDetails(pet)}>
-                <div className="modern-pet-image-container">
-                  <div className="modern-pet-image">
-                    {pet.imageUrl ? (
-                      <img src={pet.imageUrl} alt={pet.name} />
-                    ) : (
-                      <div className="modern-image-placeholder">
-                        {pet.species === "dog" ? "🐶" : 
-                         pet.species === "cat" ? "🐱" : 
-                         pet.species === "bird" ? "🐦" : 
-                         pet.species === "rabbit" ? "🐰" : "🐾"}
-                      </div>
-                    )}
-                  </div>
-                  <div className="modern-pet-species-badge">{pet.species || "Pet"}</div>
-                  <div className="modern-pet-card-heart">❤️</div>
-                </div>
-                
-                <div className="modern-pet-info">
-                  <h3>{pet.name}</h3>
-                  <p className="modern-pet-owner">Loved by {pet.owner}</p>
+<div className="modern-pets-grid">
+  {filteredPets.map((pet) => (
+    <div key={pet.id} className="modern-pet-card">
+      <div className="modern-pet-image-container">
+        <div className="modern-pet-image">
+          {pet.imageUrl ? (
+            <img src={pet.imageUrl} alt={pet.name} />
+          ) : (
+            <div className="modern-image-placeholder">
+              {pet.species === "dog" ? "🐶" : 
+               pet.species === "cat" ? "🐱" : 
+               pet.species === "bird" ? "🐦" : 
+               pet.species === "rabbit" ? "🐰" : "🐾"}
+            </div>
+          )}
+        </div>
+        <div className={`modern-pet-status-badge status-${pet.status}`}>
+          {pet.status}
+        </div>
+        <div className="modern-pet-card-heart">❤️</div>
+      </div>
+      
+      <div className="modern-pet-info">
+        <h3>{pet.name}</h3>
+        <p className="modern-pet-owner">Owner: {pet.owner}</p>
+        
+        <div className="modern-pet-details">
+          {pet.breed && (
+            <span className="modern-detail-tag">{pet.breed}</span>
+          )}
+          {pet.species && (
+            <span className="modern-detail-tag">{pet.species}</span>
+          )}
+        </div>
                   
-                  <div className="modern-pet-details">
-                    {pet.breed && (
-                      <span className="modern-detail-tag">{pet.breed}</span>
-                    )}
-                    {pet.species && (
-                      <span className="modern-detail-tag">{pet.species}</span>
-                    )}
-                  </div>
-                  
-                  {pet.address && (
-                    <p className="modern-pet-address">
-                      <span className="modern-icon">📍</span> {pet.address}
-                    </p>
-                  )}
-                  
-                  {pet.contact && (
-                    <p className="modern-pet-contact">
-                      <span className="modern-icon">📞</span> {pet.contact}
-                    </p>
-                  )}
-                </div>
-                
-                <div className="modern-pet-actions">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(pet);
-                    }}
-                    className="modern-edit-btn"
-                    disabled={isLoading}
-                  >
-                    <span className="modern-btn-icon">✏️</span> Edit
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(pet.id);
-                    }}
-                    className="modern-delete-btn"
-                    disabled={isLoading}
-                  >
-                    <span className="modern-btn-icon">🗑️</span> Delete
-                  </button>
-                </div>
+  <div className="modern-pet-attributes">
+          {pet.age && (
+            <div className="modern-pet-attribute">
+              <span className="modern-attribute-icon">🎂</span>
+              <div className="modern-attribute-content">
+                <span className="modern-attribute-label">Age</span>
+                <span className="modern-attribute-value">{pet.age} years</span>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+          
+          {pet.weight && (
+            <div className="modern-pet-attribute">
+              <span className="modern-attribute-icon">⚖️</span>
+              <div className="modern-attribute-content">
+                <span className="modern-attribute-label">Weight</span>
+                <span className="modern-attribute-value">{pet.weight} kg</span>
+              </div>
+            </div>
+          )}
+          
+          {pet.price && (
+            <div className="modern-pet-attribute">
+              <span className="modern-attribute-icon">💰</span>
+              <div className="modern-attribute-content">
+                <span className="modern-attribute-label">Price</span>
+                <span className="modern-attribute-value">${pet.price}</span>
+              </div>
+            </div>
+          )}
+          
+          {pet.contact && (
+            <div className="modern-pet-attribute">
+              <span className="modern-attribute-icon">📞</span>
+              <div className="modern-attribute-content">
+                <span className="modern-attribute-label">Contact number</span>
+                <span className="modern-attribute-value">{pet.contact}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+                
+<div className="modern-pet-actions">
+        <button
+          onClick={() => showPetDetails(pet)}
+          className="modern-see-more-btn"
+        >
+          <span className="modern-btn-icon">👁️</span> See More
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEdit(pet);
+          }}
+          className="modern-edit-btn"
+          disabled={isLoading}
+        >
+          <span className="modern-btn-icon">✏️</span> Edit
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete(pet.id);
+          }}
+          className="modern-delete-btn"
+          disabled={isLoading}
+        >
+          <span className="modern-btn-icon">🗑️</span> Delete
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
         )}
       </section>
 
       <footer className="modern-app-footer">
-        <p>Made with ❤️ for pet lovers everywhere — celebrating the bond between people and their pets.</p>
+        <p>Pet Inventory Management System — Track and manage your pet inventory with ease.</p>
         <div className="modern-footer-paws">
           <span>🐾</span>
           <span>🐾</span>
