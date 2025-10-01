@@ -256,7 +256,7 @@ export default function PetInventoryPage() {
         <div className="modern-header-content">
           <div className="modern-logo">
             <span className="modern-paw-icon">🐾</span>
-            <h1>PetLogix</h1>
+            <h1>PetLogix24</h1>
           </div>
           <p className="modern-tagline">Manage your pet inventory with ease</p>
         </div>
